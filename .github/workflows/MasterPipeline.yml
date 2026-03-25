@@ -10,10 +10,10 @@
 
 name: MasterTestExecution
 on:
-  # push:
-  #   branches:
-  #     - master
-  workflow_dispatch:
+   push:
+     branches:
+       - master
+   workflow_dispatch:
     inputs:
       app:
         description: "Application to run"
@@ -66,7 +66,7 @@ on:
         required: false
         default: "Test Execution Summary"
 
-  workflow_run:
+   workflow_run:
     workflows: ["Static Code Analysis"]   # Name of first workflow
     types:
       - completed
