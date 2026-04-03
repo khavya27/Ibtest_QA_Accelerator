@@ -120,14 +120,14 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install ibtest-*.whl
+          pip install infobeans_qai-*.whl
           python -m playwright install chromium
           pip list
 
-      - name: Verify ibtest is installed
+      - name: Verify infobeans-qai is installed
         run: |
-          command -v ibtest || (echo "ibtest not found" && exit 1)
-          ibtest --help || true
+          command -v infobeans-qai || (echo "infobeans-qai not found" && exit 1)
+          infobeans-qai --help || true
 
       - name: Check pip deps
         run: pip list
@@ -144,7 +144,7 @@ jobs:
             echo "Branch: ${{ github.ref }}"
             echo
             echo "Regards,"
-            echo "IBTest Test Automation Team"
+            echo "infobeans-qai Test Automation Team"
             echo 'EOF'
           } >> $GITHUB_ENV          
           echo "testExecutionStartedTitle=IBTest Notification | Project: ${{ github.event.inputs.app }} - Test Execution Started" >> $GITHUB_ENV
@@ -160,7 +160,7 @@ jobs:
           SLACK_TITLE: ${{ env.testExecutionStartedTitle }}
           SLACK_MESSAGE: ${{ env.testExecutionStartedMessageSlack }}
           SLACK_USERNAME: GitHub Actions
-          SLACK_FOOTER: "ibtest test automation"
+          SLACK_FOOTER: "infobeans-qai test automation"
 
       - name: Microsoft Teams Message Card
         # You may pin to the exact commit or the version.
@@ -176,7 +176,7 @@ jobs:
             # The message content. Supports HTML up to a certain level (interpreted by Microsoft Teams). Can also be empty.
           message: ${{ env.testExecutionStartedMessageTeams }}
 
-      - name: Execute Tests with ibtest
+      - name: Execute Tests with infobeans-qai
         id: execute_tests
         if: always()
         continue-on-error: true
@@ -190,7 +190,7 @@ jobs:
           XRAY_EXECUTION_DESC: Test Execution after commit - ${{ env.latestCommitMessage }}
 
         run: |
-          echo "➡ Running tests using ibtest in CLI"
+          echo "➡ Running tests using infobeans-qai in CLI"
 
           EXTRA_ARGS=""
 
@@ -229,9 +229,9 @@ jobs:
             EXTRA_ARGS="$EXTRA_ARGS ${{ github.event.inputs.xray_test_args }}"
           fi
 
-          echo "Command: ibtest run --app ${{ github.event.inputs.app }} $EXTRA_ARGS"
+          echo "Command: infobeans-qai run --app ${{ github.event.inputs.app }} $EXTRA_ARGS"
 
-          ibtest run \
+          infobeans-qai run \
             --app "${{ github.event.inputs.app }}" \
             $EXTRA_ARGS || echo "TEST_FAILED=1" >> $GITHUB_ENV
 
@@ -274,7 +274,7 @@ jobs:
             echo "Branch: ${{ github.ref }}"
             echo
             echo "Regards,"
-            echo "IBTest Test Automation Team"
+            echo "infobeans-qai Test Automation Team"
             echo 'EOF'
           } >> $GITHUB_ENV
           echo "testExecutionCompletedTitle=IBTest Notification | Project: ${{ github.event.inputs.app }} - Test Execution Completed" >> $GITHUB_ENV
@@ -285,16 +285,16 @@ jobs:
           REPORT_TITLE="${{ github.event.inputs.report_title }}"
 
           if [ "${{ github.event.inputs.report_type }}" == "detailed" ]; then
-            ibtest generate-report \
+            infobeans-qai generate-report \
               --detailed \
               --report-title "$REPORT_TITLE" \
-              --output "IBTest_test_summary.pdf" \
+              --output "infobeans-qai_test_summary.pdf" \
               ${{ env.REPORTS_DIR }}/pytest_report.json
             echo "Generate the executive report with detailed test statistics"
           else
-            ibtest generate-report \
+            infobeans-qai generate-report \
               --report-title "$REPORT_TITLE" \
-              --output "IBTest_test_summary.pdf" \
+              --output "infobeans-qai_test_summary.pdf" \
               ${{ env.REPORTS_DIR }}/pytest_report.json
             echo "Generate the basic executive report."
           fi
@@ -423,8 +423,8 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ibtest_execution_report
-          path: IBTest_test_summary.pdf
+          name: infobeans-qai_execution_report
+          path: infobeans-qai_test_summary.pdf
 
       - name: Upload test results to GitHub
         if: always()
@@ -458,7 +458,7 @@ jobs:
           export SKIPPED_TESTS="${{ steps.extract-stats.outputs.skipped }}"
           
           # Run the script to prepare the email body
-          ibtest prepare-email --template-path .github/templates/email-template.html
+          infobeans-qai prepare-email --template-path .github/templates/email-template.html
           
           DELIM="__EMAIL_BODY_EOF__"
           {
@@ -487,12 +487,12 @@ jobs:
           server_port: 587
           username: ${{ secrets.GMAIL_USERNAME }}
           password: ${{ secrets.GMAIL_APP_PASSWORD }}
-          subject: "IBTest Test Execution updates for app ${{ env.APP_NAME }}: ${{ env.TEST_FAILED == '1' && 'FAILED' || 'PASSED' }} at ${{ env.TIMESTAMPFORSUBJECT }}"
+          subject: "infobeans-qai Test Execution updates for app ${{ env.APP_NAME }}: ${{ env.TEST_FAILED == '1' && 'FAILED' || 'PASSED' }} at ${{ env.TIMESTAMPFORSUBJECT }}"
 
           to: ${{ secrets.NOTIFICATION_EMAIL }}
-          from: "IBTest Testing Team <${{ secrets.GMAIL_USERNAME }}>"
+          from: "infobeans-qai Testing Team <${{ secrets.GMAIL_USERNAME }}>"
           html_body: ${{ steps.prepare-email.outputs.email_body }}
-          attachments: "${{ env.ZipReportName }},IBTest_test_summary.pdf,allure-report/complete.html"
+          attachments: "${{ env.ZipReportName }},infobeans-qai_test_summary.pdf,allure-report/complete.html"
 
       - name: Slack Summary - Post execution
         if: always()
@@ -506,7 +506,7 @@ jobs:
           SLACK_TITLE: ${{ env.testExecutionCompletedTitle }}
           SLACK_MESSAGE: ${{ env.testExecutionCompletedMessageSlack }}
           SLACK_USERNAME: GitHub Actions
-          SLACK_FOOTER: "ibtest test automation"
+          SLACK_FOOTER: "infobeans-qai test automation"
 
       - name: Microsoft Teams Summary - Post execution
         if: always()
