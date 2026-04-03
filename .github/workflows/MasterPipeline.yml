@@ -137,17 +137,17 @@ jobs:
           echo "latestCommitMessage=$(git log -1 --pretty=format:'%s')" >> $GITHUB_ENV
           echo "currentDateTime=$(date +'%Y-%m-%d %H-%M')" >> $GITHUB_ENV
           echo "APP_NAME=${{ github.event.inputs.app }}" >> $GITHUB_ENV
-          echo "testExecutionStartedMessageTeams=Project: ${{ github.event.inputs.app }} - Test Execution Started for RunId: <a href=\"https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\">${{ github.run_id }}</a><br>Branch: ${{ github.ref }}<br><br>Regards,<br>IBTest Test Automation Team" >> $GITHUB_ENV
+          echo "testExecutionStartedMessageTeams=Project: ${{ github.event.inputs.app }} - Test Execution Started for RunId: <a href=\"https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\">${{ github.run_id }}</a><br>Branch: ${{ github.ref }}<br><br>Regards,<br>InfoBeans Accelerator Team" >> $GITHUB_ENV
           {
             echo 'testExecutionStartedMessageSlack<<EOF'
             echo "Project: ${{ github.event.inputs.app }} - Test Execution Started for RunId: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
             echo "Branch: ${{ github.ref }}"
             echo
             echo "Regards,"
-            echo "infobeans-qai Test Automation Team"
+            echo "InfoBeans Accelerator Team"
             echo 'EOF'
           } >> $GITHUB_ENV          
-          echo "testExecutionStartedTitle=IBTest Notification | Project: ${{ github.event.inputs.app }} - Test Execution Started" >> $GITHUB_ENV
+          echo "testExecutionStartedTitle=InfoBeans-QAI Notification | Project: ${{ github.event.inputs.app }} - Test Execution Started" >> $GITHUB_ENV
 
       - name: Slack Notification - Start
         uses: rtCamp/action-slack-notify@v2
@@ -160,7 +160,7 @@ jobs:
           SLACK_TITLE: ${{ env.testExecutionStartedTitle }}
           SLACK_MESSAGE: ${{ env.testExecutionStartedMessageSlack }}
           SLACK_USERNAME: GitHub Actions
-          SLACK_FOOTER: "infobeans-qai test automation"
+          SLACK_FOOTER: "InfoBeans Accelerator"
 
       - name: Microsoft Teams Message Card
         # You may pin to the exact commit or the version.
@@ -265,7 +265,7 @@ jobs:
           TOTAL_SECONDS=$(($(date +%s) - $JOB_START_TIME))
           DURATION_FORMATTED=$(printf '%dm %ds' $((TOTAL_SECONDS/60)) $((TOTAL_SECONDS%60)))
           echo "TOTAL_RUNTIME=$DURATION_FORMATTED" >> $GITHUB_ENV
-          echo "testExecutionCompletedMessageTeams=Project: $APP_NAME - Test Execution Completed for RunId: <a href=\"https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\">${{ github.run_id }}</a> on ${{ env.currentDateTime }}<br>Status: ${{ steps.execute_tests.outcome }}<br>Duration: $DURATION_FORMATTED<br>Branch: ${{ github.ref }}<br><br>Regards,<br>IBTest Test Automation Team" >> $GITHUB_ENV
+          echo "testExecutionCompletedMessageTeams=Project: $APP_NAME - Test Execution Completed for RunId: <a href=\"https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\">${{ github.run_id }}</a> on ${{ env.currentDateTime }}<br>Status: ${{ steps.execute_tests.outcome }}<br>Duration: $DURATION_FORMATTED<br>Branch: ${{ github.ref }}<br><br>Regards,<br>InfoBeans Accelerator Team" >> $GITHUB_ENV
           {
             echo 'testExecutionCompletedMessageSlack<<EOF'
             echo "Project: $APP_NAME - Test Execution Completed for RunId: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }} on ${{ env.currentDateTime }}"
@@ -274,10 +274,10 @@ jobs:
             echo "Branch: ${{ github.ref }}"
             echo
             echo "Regards,"
-            echo "infobeans-qai Test Automation Team"
+            echo "InfoBeans Accelerator Team"
             echo 'EOF'
           } >> $GITHUB_ENV
-          echo "testExecutionCompletedTitle=IBTest Notification | Project: ${{ github.event.inputs.app }} - Test Execution Completed" >> $GITHUB_ENV
+          echo "testExecutionCompletedTitle=InfoBeans-QAI Notification | Project: ${{ github.event.inputs.app }} - Test Execution Completed" >> $GITHUB_ENV
 
       - name: Generate pytest report
         if: always()
@@ -423,7 +423,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: infobeans-qai_execution_report
+          name: infobeans_qai_execution_report
           path: infobeans-qai_test_summary.pdf
 
       - name: Upload test results to GitHub
@@ -487,10 +487,10 @@ jobs:
           server_port: 587
           username: ${{ secrets.GMAIL_USERNAME }}
           password: ${{ secrets.GMAIL_APP_PASSWORD }}
-          subject: "infobeans-qai Test Execution updates for app ${{ env.APP_NAME }}: ${{ env.TEST_FAILED == '1' && 'FAILED' || 'PASSED' }} at ${{ env.TIMESTAMPFORSUBJECT }}"
+          subject: "InfoBeans QAI Test Execution updates for app ${{ env.APP_NAME }}: ${{ env.TEST_FAILED == '1' && 'FAILED' || 'PASSED' }} at ${{ env.TIMESTAMPFORSUBJECT }}"
 
           to: ${{ secrets.NOTIFICATION_EMAIL }}
-          from: "infobeans-qai Testing Team <${{ secrets.GMAIL_USERNAME }}>"
+          from: "InfoBeans Accelerator Team <${{ secrets.GMAIL_USERNAME }}>"
           html_body: ${{ steps.prepare-email.outputs.email_body }}
           attachments: "${{ env.ZipReportName }},infobeans-qai_test_summary.pdf,allure-report/complete.html"
 
@@ -506,7 +506,7 @@ jobs:
           SLACK_TITLE: ${{ env.testExecutionCompletedTitle }}
           SLACK_MESSAGE: ${{ env.testExecutionCompletedMessageSlack }}
           SLACK_USERNAME: GitHub Actions
-          SLACK_FOOTER: "infobeans-qai test automation"
+          SLACK_FOOTER: "InfoBeanseans Accelerator"
 
       - name: Microsoft Teams Summary - Post execution
         if: always()

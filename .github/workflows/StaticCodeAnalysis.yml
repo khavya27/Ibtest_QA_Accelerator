@@ -43,7 +43,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install ibtest-*.whl
+          pip install infobeans_qai-*.whl
           pip install -r requirements-sca-pipeline.txt
 
       # --- Black ---
